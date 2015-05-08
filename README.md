@@ -8,11 +8,15 @@ We assume that the development platform is OSX. Since some dependencies such as 
 
 * DeepDive with Impala  
 
-    curl    | bash
+```
+curl    | bash
+```
 
 * DeepDive with Greenplum
 
-    curl | bash
+```
+curl | bash
+```
 
 Running above command will take you through the entire setup. If you would like to know how the virtual machines were created, see [here](VMs.md).
 
