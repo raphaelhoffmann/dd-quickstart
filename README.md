@@ -34,3 +34,5 @@ On ec-2 or azure, create an instance running Ubuntu 14.04 with at least 16G of m
 
   [Installation guide](DEPLOY_GREENPLUM.md)
 
+
+[OTHER](OTHER.md)
