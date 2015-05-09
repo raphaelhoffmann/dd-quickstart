@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # To install, run 
-# curl https://s3.amazonaws.com/clearcutanalytics/install | bash
+# curl https://s3.amazonaws.com/clearcutanalytics/mac-impala/install | bash
 #
 # To package, run
 # tar cvzf dive.tgz dive keys
@@ -54,7 +54,7 @@ command -v curl >/dev/null 2>&1 || {
 
 if [ ! -f dd.ova ]; then
   echo "Fetching appliance."
-  curl -O https://s3.amazonaws.com/clearcutanalytics/dd.ova
+  curl -O https://s3.amazonaws.com/clearcutanalytics/mac-impala/dd.ova
 fi
 
 echo "Import appliance into virtualbox ..."
@@ -74,7 +74,7 @@ do
 done
 
 cd $DIR
-curl --show-error --silent -O https://s3.amazonaws.com/clearcutanalytics/dive.tgz
+curl --show-error --silent -O https://s3.amazonaws.com/clearcutanalytics/mac-impala/dive.tgz
 tar xvzf dive.tgz
 
 echo "Installation completed."
