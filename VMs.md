@@ -36,7 +36,7 @@ This guide shows how we create new virtual machines.
 
 ## Setting up Networking and a Shared Volume
 
-* Make sure your VM has a NAT network adapter.
+* In your VM Settings, make sure your VM has a NAT network adapter. Activate Port Forwarding from host 3022 to guest 22.
 
 <!--
 
@@ -84,8 +84,8 @@ This guide shows how we create new virtual machines.
   Store the keys in some folder (these will be shared). Copy the public key to the VM.
 
 ```
-    scp id_rsa.pub dd@192.168.60.100:/tmp/id_rsa.pub
-    ssh dd@192.168.60.100
+    scp id_rsa.pub -p 3022 dd@127.0.0.1:/tmp/id_rsa.pub
+    ssh -p 3022 dd@127.0.0.1
     mkdir ~/.ssh
     cat /tmp/id_rsa.pub >> ~/.ssh/authorized_keys
 ```
@@ -93,7 +93,7 @@ This guide shows how we create new virtual machines.
   From your host, you should now be able to login using
 
 ```
-    ssh -i id_rsa dd@192.168.60.100
+    ssh -i id_rsa -p 3022 dd@127.0.0.1
 ```
 
 * Finally, we would like to share a directory between VM and host OS.
