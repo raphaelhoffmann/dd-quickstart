@@ -11,7 +11,6 @@ bin=`cd "$bin"; pwd`
 function print_usage(){
   echo "Usage: dive COMMAND"
   echo "       where COMMAND is one of:"
-  echo "  install              install DeepDive appliance"
   echo "  start                start appliance"
   echo "  stop                 stop appliance"
   echo "  login                SSH login into appliance"

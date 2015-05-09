@@ -12,13 +12,13 @@ That way you can use your favorite IDE for development. We recommend Intellij fo
 * **DeepDive with Impala**
 
 ```
-curl https://s3.amazonaws.com/clearcutanalytics/install-mac-impala | bash
+curl https://s3.amazonaws.com/clearcutanalytics/mac-impala/install | bash
 ```
 
 * **DeepDive with Greenplum**
 
 ```
-curl https://s3.amazonaws.com/clearcutanalytics/install-mac-greenplum | bash
+curl https://s3.amazonaws.com/clearcutanalytics/mac-greenplum/install | bash
 ```
 
 Running above command will take you through the entire setup. If you are curious and would like to know how the virtual machines were created, see [here](VMs.md).
