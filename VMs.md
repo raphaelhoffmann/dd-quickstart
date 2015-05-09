@@ -121,6 +121,17 @@ This guide shows how we create new virtual machines.
     sudo mount -t vboxsf -o uid=$UID,gid=$(id -g) dd ~/dd
 ```
 
+  Your shared folder should now be accessible on both host and guest.
+  To make the system mount the device on every restart, do
+```
+    sudoedit /etc/rc.local
+```
+  Remove the hash in the first line (before !), and insert the following line before exit:
+```
+    sudo mount -t vboxsf -o uid=$UID,gid=$(id -g) dd ~/dd
+```
+
+
 ## Uploading the Appliance to S3
 
 Subdirectory `mac-impala-dive` contains the install scripts for the appliance. To host the new appliance, do:
@@ -148,7 +159,39 @@ curl s3://...../mac-impala/install | bash
 
 ## Setting up Cloudera Impala
 
+* Add a Port Forwarding rule for guest port 7180 to host port 7180. Use the virtualbox GUI for that.
+<!--
+```
+VBoxManage modifyvm dd --natpf1 "cloudera,tcp,,7180,,7180"
+```
+-->
 * Login to the virtual machine.
+
+* Run
+```
+sudo ufw allow 7180
+```
+
+* Set up password-less sudo
+```
+sudo visudo -f /etc/sudoers.d/90-cloudimg-ubuntu
+```
+and add line
+```
+dd ALL=(ALL) NOPASSWD:ALL
+```
+
+* Change IP for hostname ubuntu
+```
+sudoedit /etc/hosts
+```
+Change to
+```
+127.0.0.1       ubuntu localhost
+#127.0.1.1      ubuntu
+```
+
+* Run installer
 
 ```
     wget http://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin
@@ -158,17 +201,7 @@ curl s3://...../mac-impala/install | bash
     sudo ./cloudera-manager-installer.bin
 ```
 
-* Change IP for hostname ubuntu
-```
-sudoedit /etc/hosts
-```
-Change to
-```
-127.0.0.1	ubuntu localhost
-#127.0.1.1	ubuntu
-```
-
-* Search for hostname `ubuntu`
+* In the cloudera installer Search for hostname `ubuntu`
 
 * If the installation requires password-less sudo, then SSH into the guest OS, and
 
@@ -180,7 +213,18 @@ and add line
 dd ALL=(ALL) NOPASSWD:ALL
 ```
 
+* Java (for DeepDive)
+```
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+```
 
+* Other required packages
+```
+sudo apt-get install git make gnuplot unzip
+```
 
 ## Setting up Greenplum
 
