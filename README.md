@@ -40,4 +40,3 @@ On ec-2 or azure, create an instance running Ubuntu 14.04 with at least 16G of m
 ## Appendix
 
 It is also possible but not recommended to run DeepDive on the Cloudera CDH Quickstart appliance. For details, see [here](VM_CLOUDERA_QUICKSTART.md).
-[OTHER](OTHER.md)
