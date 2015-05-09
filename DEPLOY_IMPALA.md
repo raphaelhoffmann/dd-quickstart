@@ -42,10 +42,10 @@ AWS Management Console.. On azure, you can go to http://MACHINENAME.cloudapp.net
 * Use defaults for remaining setup
 
 * The installer may show you a warning that your system's `swappiness` setting is too high. In an SSH shell, run
-
+```
     sudo sysctl vm.swappiness=10
     sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.conf'
-
+```
 * When installer prompts for Cluster Setup, choose "Core with Impala", and again use defaults elsewhere
 
 ## 3. Install other DeepDive Dependencies

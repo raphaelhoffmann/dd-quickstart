@@ -158,6 +158,30 @@ curl s3://...../mac-impala/install | bash
     sudo ./cloudera-manager-installer.bin
 ```
 
+* Change IP for hostname ubuntu
+```
+sudoedit /etc/hosts
+```
+Change to
+```
+127.0.0.1	ubuntu localhost
+#127.0.1.1	ubuntu
+```
+
+* Search for hostname `ubuntu`
+
+* If the installation requires password-less sudo, then SSH into the guest OS, and
+
+```
+sudo visudo -f /etc/sudoers.d/90-cloudimg-ubuntu
+```
+and add line
+```
+dd ALL=(ALL) NOPASSWD:ALL
+```
+
+
+
 ## Setting up Greenplum
 
 
