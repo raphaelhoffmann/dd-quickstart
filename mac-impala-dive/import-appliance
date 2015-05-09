@@ -1,0 +1,41 @@
+#!/bin/bash
+
+DIR=~/.dive
+cd $DIR/vms
+
+echo "Import appliance into virtualbox ..."
+
+# capture and display stdout
+exec 5>&1
+FF=$(VBoxManage import dd.ova|tee >(cat - >&5))
+echo $FF
+
+NAME=$(echo "$FF" | grep  "1: Suggested VM name " | cut -f 2 -d "\"")
+echo "NAME=$NAME" > ../conf
+echo "Name is $NAME"
+
+# This code snippet checks which IPs are currently in use by host
+# The idea was to create a host-only network on a new IP not currently
+# used. However, with port forwarding we no longer need that.
+#USEDIPS=$(ifconfig | grep "inet " | cut -d " " -f 2)
+#for line in $USEDIPS
+#do
+#  b=${line:0:11}
+#  if [ "$b" == "192.168.60." ]; then
+#    echo "One of your network adapters uses an IP with prefix 192.168.60."
+#    echo "DeepDive uses this IP. Please do not use this IP and try again."
+#    exit 1
+#  fi
+#done
+
+cd ..
+echo "Installation completed."
+
+#echo "Do you wish to add the installation dir to your PATH in ~/.bash_profile?"
+#select yn in "Yes" "No"; do
+#  case $yn in
+#    Yes ) echo 'export PATH='$DIR':$PATH' >> ~/.bash_profile; break;;
+#    No ) exit;;
+#  esac
+#done
+

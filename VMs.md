@@ -156,5 +156,7 @@ curl s3://...../mac-impala/install | bash
 ## Setting up Greenplum
 
 
+## TODO:
 
+Answer of http://serverfault.com/questions/243343/headless-ubuntu-server-machine-sometimes-stuck-at-grub-menu
 

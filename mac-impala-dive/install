@@ -57,35 +57,23 @@ if [ ! -f dd.ova ]; then
   curl -O https://s3.amazonaws.com/clearcutanalytics/mac-impala/dd.ova
 fi
 
-echo "Import appliance into virtualbox ..."
-VBoxManage import dd.ova
-
-# TODO: CHECK IPs in USE
-
-USEDIPS=$(ifconfig | grep "inet " | cut -d " " -f 2)
-for line in $USEDIPS
-do
-  b=${line:0:11}
-  if [ "$b" == "192.168.60." ]; then
-    echo "One of your network adapters uses an IP with prefix 192.168.60."
-    echo "DeepDive uses this IP. Please do not use this IP and try again."
-    exit 1
-  fi
-done
-
 cd $DIR
 curl --show-error --silent -O https://s3.amazonaws.com/clearcutanalytics/mac-impala/dive.tgz
 tar xvzf dive.tgz
 
+. import-appliance
+
 echo "Installation completed."
 
-echo "Do you wish to add the installation dir to your PATH in ~/.bash_profile?"
-select yn in "Yes" "No"; do
-  case $yn in
-    Yes ) echo 'export PATH='$DIR':$PATH' >> ~/.bash_profile; break;;
-    No ) exit;;
-  esac
-done
+echo "Please add ~/.dive to your PATH environment variable."
+
+#echo "Do you wish to add the installation dir to your PATH in ~/.bash_profile?"
+#select yn in "Yes" "No"; do
+#  case $yn in
+#    Yes ) echo 'export PATH='$DIR':$PATH' >> ~/.bash_profile; break;;
+#    No ) exit;;
+#  esac
+#done
 
 
 

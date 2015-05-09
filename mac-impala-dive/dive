@@ -4,10 +4,6 @@ bin=`which $0`
 bin=`dirname ${bin}`
 bin=`cd "$bin"; pwd`
 
-#DEFAULT_LIBEXEC_DIR="$bin"/../libexec
-#HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$DEFAULT_LIBEXEC_DIR}
-#. $HADOOP_LIBEXEC_DIR/hadoop-config.sh
-
 function print_usage(){
   echo "Usage: dive COMMAND"
   echo "       where COMMAND is one of:"
@@ -21,6 +17,19 @@ if [ $# = 0 ]; then
   exit
 fi
 
+# read config settings
+. ~/.dive/conf
+
+if [ -z ${NAME+x} ]; then
+  echo "Your configuration at ~/.dive/conf does not contain \$NAME"
+  exit 1
+fi
+
+if [ -z ${PORT+x} ]; then
+  echo "Your configuration at ~/.dive/conf does not contain \$PORT"
+  exit 1
+fi
+
 COMMAND=$1
 case $COMMAND in
   # usage flags
@@ -32,15 +41,43 @@ case $COMMAND in
   start|up)
     echo "Starting DeepDive appliance." 1>&2
     echo "" 1>&2
-    VBOUT="$(VBoxManage startvm dd --type headless)"
-    VBEXIT=$?
-    if [ ! "$VBEXIT" -eq "0" ]; then
-      exit $VBEXIT
-    fi
+
+    #Find a free port
+    PORT=$(for port in $(seq 3022 4022); do echo -ne "\035" | telnet 127.0.0.1 $port > /dev/null 2>&1; [ $? -eq 1 ] && echo "$port" && break; done)
+    #echo "PORT=$PORT" >> ../conf
+    echo "SSH mapped to local port $PORT"
+
+    # Port forwarding
+    VBoxManage modifyvm $NAME --natpf1 delete ssh
+    VBoxManage modifyvm $NAME --natpf1 "ssh,tcp,,$PORT,,22"
+    echo "NAME=$NAME" > ~/.dive/conf
+    echo "PORT=$PORT" >> ~/.dive/conf
+
+    #VBOUT="$(VBoxManage startvm $NAME --type headless)"
+    #VBOUT="$(VBoxHeadless --startvm $NAME)"
+    #command="VBoxHeadless --startvm $NAME --vrde off"
+    #stderr=$($command 2>&1) # > /dev/null)
+    #VBOUT=$(($command &); sleep 3)
+
+    (VBoxHeadLess --startvm $NAME --vrde off &) > ~/.dive/log
+    #if [[ $VBOUT =~ .*Error.* ]]; then
+    #   echo $VBOUT
+    #   exit 1
+    #fi
+
+    
+
+    #VBEXIT=$?
+    #if [ ! "$VBEXIT" -eq "0" ]; then
+    #  echo "Error."
+    #  echo $VBOUT
+    #  exit $VBEXIT
+    #fi
+
     SEC=0
     while true
     do
-      RL=`VBoxManage showvminfo dd | grep "Additions run level:" |cut -d " " -f 20`
+      RL=$(VBoxManage showvminfo $NAME | grep "Additions run level:" |cut -d " " -f 20)
       if [ "$RL" -eq "2" ]; then
          echo "DeepDive appliance started."
          break
@@ -49,21 +86,21 @@ case $COMMAND in
       SEC=$(($SEC + 1))
       if [ "$SEC" -gt 30 ]; then
          echo "DeepDive has not started within 30 seconds. Here's stdout of VBoxManage:"
-         echo $VBOUT
+         cat ~/.dive/log
          exit 1
       fi
     done
-
   ;;
 
   stop|down)
     echo "Stopping DeepDive appliance." 1>&2
     echo "" 1>&2
-    VBoxManage controlvm dd acpipowerbutton
+    VBoxManage controlvm $NAME acpipowerbutton
   ;;
 
   login|ssh)
-    ssh -i keys/id_rsa dd@192.168.60.100    
+    #ssh -i keys/id_rsa -p $PORT dd@localhost
+    ssh -i keys/id_rsa -p 3022 dd@127.0.0.1
   ;;
 
 esac
