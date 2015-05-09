@@ -4,9 +4,9 @@ The following guides will help you get DeepDive quickly up and running. Developm
 
 ## For Development
 
-We assume that the development environment is OSX. Since some dependencies such as Impala require Linux, we run DeepDive inside a virtual machine. User data and code are stored in directory `~/dd` on the host environment
+We assume that the development environment is OSX. Since some dependencies such as Impala require Linux, we run DeepDive inside a virtual machine. 
 
-To facilitate development, however, DeepDive and DeepDive apps are stored in folder `~/dd` in the host environment and then shared between guest and host.
+To facilitate development, DeepDive and DeepDive apps are stored in folder `~/dd` in the host environment and then shared between guest and host.
 That way you can use your favorite IDE for development. We recommend Intellij for DeepDive (scala), and pycharm for DeepDive apps (python).
 
 * **DeepDive with Impala**
