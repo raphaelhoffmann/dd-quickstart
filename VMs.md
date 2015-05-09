@@ -116,6 +116,30 @@ This guide shows how we create new virtual machines.
     sudo mount -t vboxsf -o uid=$UID,gid=$(id -g) dd ~/dd
 ```
 
+## Uploading the Appliance to S3
+
+Subdirectory `mac-impala-dive` contains the install scripts for the appliance. To host the new appliance, do:
+
+1. Package a few of the files
+
+```
+tar cvzf dive.tgz keys dive
+```
+
+2. Upload the following to S3:
+```
+dive.tgz
+install
+dd.ova
+```
+dd.ova is the appliance you created. Make sure all file permissions are set to public.
+
+3. Test
+
+```
+curl s3://...../mac-impala/install | bash
+```
+
 
 ## Setting up Cloudera Impala
 
@@ -128,5 +152,9 @@ This guide shows how we create new virtual machines.
 
     sudo ./cloudera-manager-installer.bin
 ```
+
+## Setting up Greenplum
+
+
 
 

@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# To install, run 
+# curl https://s3.amazonaws.com/clearcutanalytics/install | bash
+#
+# To package, run
+# tar cvzf dive.tgz dive keys
+# We do not package dd.ova, since gzip does not decrease size and tar/gz are quite
+# slow for this large file.
+
+echo '-------------------------------------------------------------------------------'
+
+#determine OS
+uname=$(uname)
+
+if [ ! $uname == "Darwin" ]; then
+   echo "This script only works for MacOS (Darwin). Run uname to check your OS."
+   exit 1
+fi
+
+if [ -d ~/.dive ]; then
+   echo "Existing installation of DeepDive. Please remove ~/.dive and try again."
+   exit 1
+fi
+
+mkdir ~/.dive
+
+DIR=~/.dive
+
+# check if virtualbox is installed
+command -v VBoxManage >/dev/null 2>&1 || { 
+   echo "VirtualBox (VBoxManage) is not installed. Install it as follows and then try again."
+   echo ""
+   # check if brew is installed (ruby is pre-installed on Mac)
+   command -v brew >/dev/null 2>&1 || { echo >&2 'ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"'; }
+   echo "sudo brew update"
+   echo "sudo brew tap phinze/homebrew-cask"
+   echo "sudo brew install brew-cask"
+   echo "sudo brew cask install virtualbox"
+   exit 1   
+}
+
+if [ ! -d $DIR/vms ]; then
+  mkdir $DIR/vms
+fi
+
+cd $DIR/vms
+
+# check if wget is installed
+command -v curl >/dev/null 2>&1 || {
+   echo "curl is not installed. Install curl and try again."
+   exit 1
+}
+
+if [ ! -f dd.ova ]; then
+  echo "Fetching appliance."
+  curl -O https://s3.amazonaws.com/clearcutanalytics/dd.ova
+fi
+
+echo "Import appliance into virtualbox ..."
+VBoxManage import dd.ova
+
+# TODO: CHECK IPs in USE
+
+USEDIPS=$(ifconfig | grep "inet " | cut -d " " -f 2)
+for line in $USEDIPS
+do
+  b=${line:0:11}
+  if [ "$b" == "192.168.60." ]; then
+    echo "One of your network adapters uses an IP with prefix 192.168.60."
+    echo "DeepDive uses this IP. Please do not use this IP and try again."
+    exit 1
+  fi
+done
+
+cd $DIR
+curl --show-error --silent -O https://s3.amazonaws.com/clearcutanalytics/dive.tgz
+tar xvzf dive.tgz
+
+echo "Installation completed."
+
+echo "Do you wish to add the installation dir to your PATH in ~/.bash_profile?"
+select yn in "Yes" "No"; do
+  case $yn in
+    Yes ) echo 'export PATH='$DIR':$PATH' >> ~/.bash_profile; break;;
+    No ) exit;;
+  esac
+done
+
+
+

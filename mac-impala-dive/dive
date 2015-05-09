@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+bin=`which $0`
+bin=`dirname ${bin}`
+bin=`cd "$bin"; pwd`
+
+#DEFAULT_LIBEXEC_DIR="$bin"/../libexec
+#HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$DEFAULT_LIBEXEC_DIR}
+#. $HADOOP_LIBEXEC_DIR/hadoop-config.sh
+
+function print_usage(){
+  echo "Usage: dive COMMAND"
+  echo "       where COMMAND is one of:"
+  echo "  install              install DeepDive appliance"
+  echo "  start                start appliance"
+  echo "  stop                 stop appliance"
+  echo "  login                SSH login into appliance"
+}
+
+if [ $# = 0 ]; then
+  print_usage
+  exit
+fi
+
+COMMAND=$1
+case $COMMAND in
+  # usage flags
+  --help|-help|-h)
+    print_usage
+    exit
+    ;;
+
+  start|up)
+    echo "Starting DeepDive appliance." 1>&2
+    echo "" 1>&2
+    VBOUT="$(VBoxManage startvm dd --type headless)"
+    VBEXIT=$?
+    if [ ! "$VBEXIT" -eq "0" ]; then
+      exit $VBEXIT
+    fi
+    SEC=0
+    while true
+    do
+      RL=`VBoxManage showvminfo dd | grep "Additions run level:" |cut -d " " -f 20`
+      if [ "$RL" -eq "2" ]; then
+         echo "DeepDive appliance started."
+         break
+      fi
+      sleep 1
+      SEC=$(($SEC + 1))
+      if [ "$SEC" -gt 30 ]; then
+         echo "DeepDive has not started within 30 seconds. Here's stdout of VBoxManage:"
+         echo $VBOUT
+         exit 1
+      fi
+    done
+
+  ;;
+
+  stop|down)
+    echo "Stopping DeepDive appliance." 1>&2
+    echo "" 1>&2
+    VBoxManage controlvm dd acpipowerbutton
+  ;;
+
+  login|ssh)
+    ssh -i keys/id_rsa dd@192.168.60.100    
+  ;;
+
+esac
+
