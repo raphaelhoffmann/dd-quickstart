@@ -7,15 +7,15 @@ The following guides will help you get DeepDive quickly up and running. Developm
 We assume that the development environment is OSX. Since some dependencies such as Impala require Linux, we run DeepDive inside a virtual machine. User data and code are stored in directory `~/dd` on the host environment
 
 To facilitate development, however, DeepDive and DeepDive apps are stored in folder `~/dd` in the host environment and then shared between guest and host.
-That way you can use your favorite IDE or editor for development. We recommend Intellij for DeepDive (scala), and pycharm for DeepDive apps (python).
+That way you can use your favorite IDE for development. We recommend Intellij for DeepDive (scala), and pycharm for DeepDive apps (python).
 
-* DeepDive with Impala  
+* **DeepDive with Impala**
 
 ```
 curl https://s3.amazonaws.com/clearcutanalytics/install-mac-impala | bash
 ```
 
-* DeepDive with Greenplum
+* **DeepDive with Greenplum**
 
 ```
 curl https://s3.amazonaws.com/clearcutanalytics/install-mac-greenplum | bash
@@ -29,11 +29,11 @@ Note: On OSX, you can also run DeepDive without a virtual machine using a local 
 
 On ec-2 or azure, create an instance running Ubuntu 14.04 with at least 16G of memory and a 100G EBS volume.
 
-* DeepDive with Impala
+* **DeepDive with Impala**
 
   [Installation guide](DEPLOY_IMPALA.md)
 
-* DeepDive with Greenplum
+* **DeepDive with Greenplum**
 
   [Installation guide](DEPLOY_GREENPLUM.md)
 
