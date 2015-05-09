@@ -36,6 +36,10 @@ This guide shows how we create new virtual machines.
 
 ## Setting up Networking and a Shared Volume
 
+* Make sure your VM has a NAT network adapter.
+
+<!--
+
 * In menu, select VirtualBox, Preferences, Network, Host-only Networks, and add a new host-only network.
   Change its settings to the following:
 
@@ -69,6 +73,7 @@ This guide shows how we create new virtual machines.
   Then run `sudo ifconfig eth1 up`. The new adapter shows up, but without IP. You need to restart your virtual machine for it to work.
 
   You can now login from your host OS using `ssh dd@192.168.60.100`.
+-->
 
 * Next, we would like to enable password-less login using a key. On your host OS, run
 
