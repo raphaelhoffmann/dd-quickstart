@@ -18,6 +18,8 @@ SSH into your instance and run:
 
     sudo ./cloudera-manager-installer.bin
 
+    sudo ufw allow 7180
+
 ## 2. CDH Setup
 
 Access the CDH installer through your browser. Check your public IP/DNS on ec-2 in the
@@ -56,9 +58,14 @@ Install a newer version of JDK
     sudo apt-get update
     sudo apt-get install oracle-java8-installer
 
-Install remaining packages
+Install remaining packages for DeepDive repo
 
     sudo apt-get install git make gnuplot unzip
+
+Install remaining packages for sampler repo
+
+    sudo apt-get install g++ libnuma-dev libtclap-dev
+
 
 ## 4. Install DeepDive
 
@@ -75,5 +82,18 @@ In the user's home directory, run
 This should take a few minutes, and then output a "summary report".
 
 Congratulations, you have successfully installed DeepDive with Impala in a data center.
+
+
+## 5. Install sampler (optional)
+
+If you would like to make changes to the sampler, run
+
+    git clone https://github.com/HazyResearch/sampler.git
+    cd sampler
+    make clean
+    make
+    
+You can then copy the generated executable (dw) to deepdive's util dir and
+rename to sampler-dw-linux.
 
 

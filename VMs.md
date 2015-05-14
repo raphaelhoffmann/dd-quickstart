@@ -226,6 +226,16 @@ sudo apt-get install oracle-java8-installer
 sudo apt-get install git make gnuplot unzip
 ```
 
+* Impyla
+```
+sudo apt-get install python-pip
+sudo apt-get install python-dev
+sudo easy_install -U setuptools
+pip install impyla
+
+```
+
+
 ## Setting up Greenplum
 
 
