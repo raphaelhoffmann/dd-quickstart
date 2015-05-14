@@ -18,7 +18,14 @@ SSH into your instance and run:
 
     sudo ./cloudera-manager-installer.bin
 
+In order to access the console in step 2, I also had to open ports in Ubuntu's firewall
+configuration as follows
+
     sudo ufw allow 7180
+    sudo ufw allow 7182
+
+This may depend on your configuration, and you may want to set up a VPN or SSH tunnel
+to avoid opening these ports to the public.
 
 ## 2. CDH Setup
 
