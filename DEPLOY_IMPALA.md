@@ -1,9 +1,9 @@
 # Deploying DeepDive with Impala
 
-On your ec-2 or azure instance with Ubuntu 14.04, perform the following steps.
-You may want to use a static (reserved) IP address for your instance since
-Impala stores the IP internally and it won't start up when the IP changes after
-reboot.
+Get an ec-2 or azure instance with Ubuntu 14.04, or RHEL 6.6.
+Add a 500G volume to hold the HDFS data. You may also wan to
+use static IP.
+
 
 ## 1. Launch CDH installer
 
@@ -15,19 +15,20 @@ SSH into your instance and run:
 
     sudo ./cloudera-manager-installer.bin
 
-In order to access the console in step 2, I also had to open ports two ports: 7180 and 7182.
+In order to access the console in step 2, you need to be able to access port 7180.
 
-Ignoring security, I opened them in Ubuntu's firewall configuration as follows
+You can create an SSH tunnel `ssh -L 7180:localhost:7180 ..`.
+
+If you're not concerned about security, you can instead open the ports in Ubuntu's
+firewall
 
     sudo ufw allow 7180
-    sudo ufw allow 7182
 
-I also had to open them in the security settings of the cloud provider. On ec-2, launch 
-the AWS Management Console and edit the settings for the
-security group you are using for your instance. To open these ports on azure, launch the
-Azure Management Portal, select your virtual machine and add the ports as endpoints.
+You will then also have to open the port in the security settings of the cloud provider. 
+On ec-2, launch the AWS Management Console and edit the settings for the
+security group you are using for your instance. To open the port on azure, launch the
+Azure Management Portal, select your virtual machine and add the port as endpoints.
 
-For better security, you may want to set up a VPN or use SSH tunnels.
 
 ## 2. CDH Setup
 
